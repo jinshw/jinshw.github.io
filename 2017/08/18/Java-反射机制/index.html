@@ -1,0 +1,746 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="基本概念在Java运行时环境中，对于任意一个类，能否知道这个类有哪些属性和方法？对于任意一个对象，能否调用它的任意一个方法？ 答案是肯定的。 这种动态获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 反射机制">
+<meta property="og:url" content="http://jinshw.github.io/2017/08/18/Java-反射机制/index.html">
+<meta property="og:site_name" content="Jinshw 博客">
+<meta property="og:description" content="基本概念在Java运行时环境中，对于任意一个类，能否知道这个类有哪些属性和方法？对于任意一个对象，能否调用它的任意一个方法？ 答案是肯定的。 这种动态获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-29T10:03:26.550Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 反射机制">
+<meta name="twitter:description" content="基本概念在Java运行时环境中，对于任意一个类，能否知道这个类有哪些属性和方法？对于任意一个对象，能否调用它的任意一个方法？ 答案是肯定的。 这种动态获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jinshw.github.io/2017/08/18/Java-反射机制/"/>
+
+
+
+
+
+  <title> Java 反射机制 | Jinshw 博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jinshw 博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-/"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jinshw.github.io/2017/08/18/Java-反射机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinshw">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinshw 博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java 反射机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-18T11:35:23+08:00">
+                2017-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>在Java运行时环境中，对于任意一个类，能否知道这个类有哪些属性和方法？对于任意一个对象，能否调用它的任意一个方法？ 答案是肯定的。</p>
+<p>这种动态获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。<br><a id="more"></a></p>
+<h1 id="反射机制的作用"><a href="#反射机制的作用" class="headerlink" title="反射机制的作用"></a>反射机制的作用</h1><p>1、 反编译：.class–&gt;.java<br>2、 通过反射机制访问java对象的属性，方法，构造方法等；</p>
+<p>这样好像更容易理解一些，下边我们具体看怎么实现这些功能。</p>
+<h1 id="在这里先看一下sun为我们提供了那些反射机制中的类："><a href="#在这里先看一下sun为我们提供了那些反射机制中的类：" class="headerlink" title="在这里先看一下sun为我们提供了那些反射机制中的类："></a>在这里先看一下sun为我们提供了那些反射机制中的类：</h1><p>java.lang.Class;<br>java.lang.reflect.Constructor; java.lang.reflect.Field;<br>java.lang.reflect.Method;<br>java.lang.reflect.Modifier;</p>
+<h1 id="具体功能实现"><a href="#具体功能实现" class="headerlink" title="具体功能实现"></a>具体功能实现</h1><p>1、反射机制获取类有三种方法，我们来获取Employee类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//第一种方式：  </div><div class="line">Classc1 = Class.forName(&quot;Employee&quot;);  </div><div class="line">//第二种方式：  </div><div class="line">//java中每个类型都有class 属性.  </div><div class="line">Classc2 = Employee.class;  </div><div class="line">   </div><div class="line">//第三种方式：  </div><div class="line">//java语言中任何一个java对象都有getClass 方法  </div><div class="line">Employeee = new Employee();  </div><div class="line">Classc3 = e.getClass(); //c3是运行时类 (e的运行时类是Employee)</div></pre></td></tr></table></figure></p>
+<p>2、创建对象：获取类以后我们来创建它的对象，利用newInstance：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[java] view plain copy print?</div><div class="line">Class c =Class.forName(&quot;Employee&quot;);  </div><div class="line">  </div><div class="line">//创建此Class 对象所表示的类的一个新实例  </div><div class="line">Objecto = c.newInstance(); //调用了Employee的无参数构造方法.</div></pre></td></tr></table></figure></p>
+<p>3、获取属性：分为所有的属性和指定的属性<br>a，先看获取所有的属性的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//获取整个类  </div><div class="line">Class c = Class.forName(&quot;java.lang.Integer&quot;);  </div><div class="line">//获取所有的属性?  </div><div class="line">Field[] fs = c.getDeclaredFields();  </div><div class="line"></div><div class="line">//定义可变长的字符串，用来存储属性  </div><div class="line">StringBuffer sb = new StringBuffer();  </div><div class="line">//通过追加的方法，将每个属性拼接到此字符串中  </div><div class="line">//最外边的public定义  </div><div class="line">sb.append(Modifier.toString(c.getModifiers()) + &quot; class &quot; + c.getSimpleName() +&quot;&#123;\n&quot;);  </div><div class="line">//里边的每一个属性  </div><div class="line">for(Field field:fs)&#123;  </div><div class="line">sb.append(&quot;\t&quot;);//空格  </div><div class="line">sb.append(Modifier.toString(field.getModifiers())+&quot; &quot;);//获得属性的修饰符，例如public，static等等  </div><div class="line">sb.append(field.getType().getSimpleName() + &quot; &quot;);//属性的类型的名字  </div><div class="line">sb.append(field.getName()+&quot;;\n&quot;);//属性的名字+回车  </div><div class="line">&#125;  </div><div class="line"></div><div class="line">sb.append(&quot;&#125;&quot;);  </div><div class="line"></div><div class="line">System.out.println(sb);</div></pre></td></tr></table></figure></p>
+<p>b，获取特定的属性，对比着传统的方法来学习：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws Exception&#123;  </div><div class="line">              </div><div class="line">//以前的方式：  </div><div class="line">/* </div><div class="line">User u = new User(); </div><div class="line">u.age = 12; //set </div><div class="line">System.out.println(u.age); //get </div><div class="line">*/  </div><div class="line"></div><div class="line">//获取类  </div><div class="line">Class c = Class.forName(&quot;User&quot;);  </div><div class="line">//获取id属性  </div><div class="line">Field idF = c.getDeclaredField(&quot;id&quot;);  </div><div class="line">//实例化这个类赋给o  </div><div class="line">Object o = c.newInstance();  </div><div class="line">//打破封装  </div><div class="line">idF.setAccessible(true); //使用反射机制可以打破封装性，导致了java对象的属性不安全。  </div><div class="line">//给o对象的id属性赋值&quot;110&quot;  </div><div class="line">idF.set(o, &quot;110&quot;); //set  </div><div class="line">//get  </div><div class="line">System.out.println(idF.get(o));  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4，获取方法，和构造方法，不再详细描述，只来看一下关键字：</p>
+<table>
+<thead>
+<tr>
+<th>方法关键字</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getDeclaredMethods()</td>
+<td>获取所有的方法</td>
+</tr>
+<tr>
+<td>getReturnType()</td>
+<td>获得方法的放回类型</td>
+</tr>
+<tr>
+<td>getParameterTypes()</td>
+<td>获得方法的传入参数类型</td>
+</tr>
+<tr>
+<td>getDeclaredMethod(“方法名”,参数类型.class,……)</td>
+<td>获得特定的方法</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>构造方法关键字</td>
+<td>含义</td>
+</tr>
+<tr>
+<td>getDeclaredConstructors()</td>
+<td>获取所有的构造方法</td>
+</tr>
+<tr>
+<td>getDeclaredConstructor(参数类型.class,……)</td>
+<td>获取特定的构造方法</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>父类和父接口</td>
+<td>含义</td>
+</tr>
+<tr>
+<td>getSuperclass()</td>
+<td>获取某类的父类</td>
+</tr>
+<tr>
+<td>getInterfaces()</td>
+<td>获取某类实现的接口</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/15/Mysql安装/" rel="next" title="Mysql安装">
+                <i class="fa fa-chevron-left"></i> Mysql安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/18/Java-泛型/" rel="prev" title="Java 泛型">
+                Java 泛型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="jinshw" />
+          <p class="site-author-name" itemprop="name">jinshw</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射机制的作用"><span class="nav-number">2.</span> <span class="nav-text">反射机制的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在这里先看一下sun为我们提供了那些反射机制中的类："><span class="nav-number">3.</span> <span class="nav-text">在这里先看一下sun为我们提供了那些反射机制中的类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体功能实现"><span class="nav-number">4.</span> <span class="nav-text">具体功能实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinshw</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

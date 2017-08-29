@@ -1,0 +1,714 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,小工具," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="场景：CMS系统部署，当时采用Nginx和Tomcat架构，即静态文件放在Nginx部署的服务器上，后台动态代码（cms后台管理系统class）部署在另一台Tomcat服务器上。Tomcat部署的系统，在文章发布后生成的静态页面文件（HTML文件等），需要拷贝到Nginx服务器上（最佳方案是两台服务器共享存储）。要求：  在Tomcat服务生成的静态文件实时（时间间隔5分钟以内）同步到Tomcat">
+<meta name="keywords" content="python,小工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python3 socket文件传输">
+<meta property="og:url" content="http://jinshw.github.io/2017/08/29/python3-socket文件传输/index.html">
+<meta property="og:site_name" content="Jinshw 博客">
+<meta property="og:description" content="场景：CMS系统部署，当时采用Nginx和Tomcat架构，即静态文件放在Nginx部署的服务器上，后台动态代码（cms后台管理系统class）部署在另一台Tomcat服务器上。Tomcat部署的系统，在文章发布后生成的静态页面文件（HTML文件等），需要拷贝到Nginx服务器上（最佳方案是两台服务器共享存储）。要求：  在Tomcat服务生成的静态文件实时（时间间隔5分钟以内）同步到Tomcat">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-29T11:34:01.738Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python3 socket文件传输">
+<meta name="twitter:description" content="场景：CMS系统部署，当时采用Nginx和Tomcat架构，即静态文件放在Nginx部署的服务器上，后台动态代码（cms后台管理系统class）部署在另一台Tomcat服务器上。Tomcat部署的系统，在文章发布后生成的静态页面文件（HTML文件等），需要拷贝到Nginx服务器上（最佳方案是两台服务器共享存储）。要求：  在Tomcat服务生成的静态文件实时（时间间隔5分钟以内）同步到Tomcat">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jinshw.github.io/2017/08/29/python3-socket文件传输/"/>
+
+
+
+
+
+  <title> python3 socket文件传输 | Jinshw 博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jinshw 博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-/"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jinshw.github.io/2017/08/29/python3-socket文件传输/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinshw">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinshw 博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python3 socket文件传输
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-29T18:50:33+08:00">
+                2017-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="场景："><a href="#场景：" class="headerlink" title="场景："></a>场景：</h1><p>CMS系统部署，当时采用Nginx和Tomcat架构，即静态文件放在Nginx部署的服务器上，后台动态代码（cms后台管理系统class）部署在另一台Tomcat服务器上。Tomcat部署的系统，在文章发布后生成的静态页面文件（HTML文件等），需要拷贝到Nginx服务器上（最佳方案是两台服务器共享存储）。要求：</p>
+<ol>
+<li>在Tomcat服务生成的静态文件实时（时间间隔5分钟以内）同步到Tomcat服务中。</li>
+<li>自动监控、7*24运行</li>
+<li>部署时方便快捷<a id="more"></a>
+</li>
+</ol>
+<h1 id="解决思路："><a href="#解决思路：" class="headerlink" title="解决思路："></a>解决思路：</h1><ol>
+<li>使用python3 开发，方便快捷，主要的服务器都是Linux版本</li>
+<li>Tomcat服务中需要同步的根文件夹，只要有文件改动（新增、修改、删除）都发起同步</li>
+</ol>
+<h1 id="遇到问题："><a href="#遇到问题：" class="headerlink" title="遇到问题："></a>遇到问题：</h1><ol>
+<li>客户端怎样实时监控文件变化</li>
+<li>在创建文件时，监控发现触发两次文件修改方法</li>
+<li>文件内容较大时，还没有复制完，就开始触发socket传递，使得文件发送失败（因为文件还没有修改完）</li>
+<li>服务器端和客户端都能实现循环等待</li>
+</ol>
+<h1 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h1><ol>
+<li>客户端监控文件变化是根据系统不同，使用的插件不同。在Windows系统中使用win32file</li>
+<li>设置可以传递文件的大小</li>
+<li>设置等待时间，即等待文件创建或者修改完后，才能socket传递</li>
+<li>服务器端：接收文件名称、创建文件、保存文件、继续等待..</li>
+</ol>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>客户端代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line">#!/user/bin/python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line">&apos;&apos;&apos;</div><div class="line">python3 socket 文件传输----客户端（Windows版本）：</div><div class="line">v1.5:</div><div class="line">1、监控指定文件夹变化</div><div class="line">2、瓶颈在文件大小：即写文件时间，如果读取文件时，文件没有写入完成，就会报错。</div><div class="line">    解决方法：添加等待时间time.sleep(3)#等待3秒</div><div class="line">&apos;&apos;&apos;</div><div class="line">import socket, os,time,logging</div><div class="line">import zipfile</div><div class="line">import sys</div><div class="line">import win32file</div><div class="line">import win32con</div><div class="line"></div><div class="line">socket = socket.socket()</div><div class="line">socket.connect((&quot;127.0.0.1&quot;, 9999))</div><div class="line">SIZE = 1024 * 1024 * 2000</div><div class="line"></div><div class="line">print(socket.recv(SIZE))</div><div class="line">print(&quot;sending please wait for a second....&quot;)</div><div class="line"></div><div class="line">ACTIONS = &#123;</div><div class="line">    1: &quot;Created&quot;,</div><div class="line">    2: &quot;Deleted&quot;,</div><div class="line">    3: &quot;Updated&quot;,</div><div class="line">    4: &quot;Renamed from something&quot;,</div><div class="line">    5: &quot;Renamed to something&quot;</div><div class="line">&#125;</div><div class="line">FILE_LIST_DIRECTORY = 0x0001</div><div class="line"></div><div class="line">path_to_watch = &apos;E:\\temp&apos;</div><div class="line">print(&apos;Watching changes in&apos;, path_to_watch)</div><div class="line">hDir = win32file.CreateFile(</div><div class="line">    path_to_watch,</div><div class="line">    FILE_LIST_DIRECTORY,</div><div class="line">    win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,</div><div class="line">    None,</div><div class="line">    win32con.OPEN_EXISTING,</div><div class="line">    win32con.FILE_FLAG_BACKUP_SEMANTICS,</div><div class="line">    None</div><div class="line">)</div><div class="line"></div><div class="line">COUNT = 0</div><div class="line"></div><div class="line">while 1:</div><div class="line">    results = win32file.ReadDirectoryChangesW(</div><div class="line">        hDir,</div><div class="line">        1024,</div><div class="line">        True,</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_FILE_NAME |</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_DIR_NAME |</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_ATTRIBUTES |</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_SIZE |</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |</div><div class="line">        win32con.FILE_NOTIFY_CHANGE_SECURITY,</div><div class="line">        None,</div><div class="line">        None)</div><div class="line">    COUNT = COUNT + 1</div><div class="line">    print(results)</div><div class="line">    print(COUNT)</div><div class="line">    print(&quot;--------&quot;)</div><div class="line">    for action, filename in results:</div><div class="line">        full_filename = os.path.join(path_to_watch, filename)</div><div class="line">        print(full_filename, ACTIONS.get(action, &quot;Unknown&quot;))</div><div class="line">        if action == 3:</div><div class="line">            print(&quot;permission =======&quot;)</div><div class="line">            print(full_filename)</div><div class="line">            time.sleep(3) #睡眠时间：等待文件复制完成</div><div class="line">            try:</div><div class="line">                f2 = open(full_filename, &apos;rb&apos;)</div><div class="line">                socket.sendall(bytes(f2.name, encoding=&quot;utf-8&quot;))</div><div class="line">                data = f2.read(SIZE)</div><div class="line">                socket.sendall(data)</div><div class="line">                f2.close()</div><div class="line">            except Exception as e:</div><div class="line">                logging.error(&quot;文件打开异常...&quot;)</div><div class="line">                logging.exception(e)</div><div class="line">            finally:</div><div class="line">                pass</div><div class="line"></div><div class="line">print(&quot;sended!&quot;)</div><div class="line">socket.close()</div><div class="line">print(&quot;connection closed&quot;)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>服务端代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">#!/user/bin/python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line">&apos;&apos;&apos;</div><div class="line">python3 socket 文件传输--服务端（Windows版本）：</div><div class="line">v1.5:</div><div class="line">1、接收客户端传递过来的文件</div><div class="line"></div><div class="line">&apos;&apos;&apos;</div><div class="line">import socket, os,logging</div><div class="line">from datetime import datetime</div><div class="line"></div><div class="line">socket = socket.socket()</div><div class="line">socket.bind((&quot;127.0.0.1&quot;, 9999))</div><div class="line">socket.listen(20)</div><div class="line">SIZE = 1024*1024*2000</div><div class="line">savepath = &quot;D:\\workspace\\python\\demo\\sc1\\py_s\\ss&quot;</div><div class="line"></div><div class="line">def Service():</div><div class="line">    while True:</div><div class="line">        conn, addr = socket.accept()</div><div class="line">        print(&apos;Accept new connection from %s:%s...&apos; % addr)</div><div class="line">        conn.sendall(bytes(&quot;Welcome from server!&quot;, encoding=&quot;utf-8&quot;))</div><div class="line">        print(conn)</div><div class="line">        try:</div><div class="line">            while True:</div><div class="line">                fpath = str(conn.recv(1024), encoding=&quot;utf-8&quot;)</div><div class="line">                f_dir = os.path.split(fpath)[0]</div><div class="line">                fname = os.path.split(fpath)[1]</div><div class="line">                fnameSave = os.path.join(savepath,fname)</div><div class="line">                if not os.path.isdir(savepath):</div><div class="line">                    os.makedirs(savepath)</div><div class="line">                ff = open(fnameSave, &apos;wb&apos;) # 按照配置的路径进行存储</div><div class="line">                starttime = datetime.now()</div><div class="line">                print(&quot;start...&quot;)</div><div class="line">                recvdata = conn.recv(SIZE)</div><div class="line">                if not recvdata:</div><div class="line">                    print(&quot;reach the end of file&quot;)</div><div class="line">                    break</div><div class="line">                else:</div><div class="line">                    ff.write(recvdata)</div><div class="line">                ff.close()</div><div class="line">                endtime = datetime.now()</div><div class="line">                print(&quot;end...花费时间(s)&quot;,(endtime-starttime).seconds)</div><div class="line">        except Exception as e:</div><div class="line">            logging.error(&quot;服务器异常...&quot;)</div><div class="line">            logging.exception(e)</div><div class="line">        finally:</div><div class="line">            conn.close()</div><div class="line"></div><div class="line">    print(&quot;receive finished&quot;)</div><div class="line">    print(&quot;connection from %s:%s closed.&quot; % addr)</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    Service()</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>文件操作和操作系统有关，不同系统调用底层的库是不一样的</li>
+<li>现在只实现了windows 版本，且只是在win10系统测试通过</li>
+<li>单个文件传输有大小限制</li>
+<li>监控文件变化时，与文件修改写入的时间有冲突，socket发起传递时，一定是文件操作关闭了才可以，不然会报错误。</li>
+<li>后续计划：<ul>
+<li>实现Linux版本</li>
+<li>实现打包传递</li>
+<li>实现超大文件传递</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/小工具/" rel="tag"># 小工具</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/18/Java-泛型/" rel="next" title="Java 泛型">
+                <i class="fa fa-chevron-left"></i> Java 泛型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="jinshw" />
+          <p class="site-author-name" itemprop="name">jinshw</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#场景："><span class="nav-number">1.</span> <span class="nav-text">场景：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决思路："><span class="nav-number">2.</span> <span class="nav-text">解决思路：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遇到问题："><span class="nav-number">3.</span> <span class="nav-text">遇到问题：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案："><span class="nav-number">4.</span> <span class="nav-text">解决方案：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">5.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinshw</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
