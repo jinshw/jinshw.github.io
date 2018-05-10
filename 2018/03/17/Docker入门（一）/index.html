@@ -1,0 +1,817 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, Docker" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="故不积跬步，无以至千里；不积小流，无以成江海。">
+<meta name="keywords" content="Hexo, Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker入门（一）">
+<meta property="og:url" content="http://jinshw.github.io/2018/03/17/Docker入门（一）/index.html">
+<meta property="og:site_name" content="Jinshw 博客">
+<meta property="og:description" content="故不积跬步，无以至千里；不积小流，无以成江海。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jinshw.github.io/images/jiagou.jpg">
+<meta property="og:updated_time" content="2018-05-04T02:51:08.320Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker入门（一）">
+<meta name="twitter:description" content="故不积跬步，无以至千里；不积小流，无以成江海。">
+<meta name="twitter:image" content="http://jinshw.github.io/images/jiagou.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jinshw.github.io/2018/03/17/Docker入门（一）/"/>
+
+
+
+
+
+  <title> Docker入门（一） | Jinshw 博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jinshw 博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-/"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jinshw.github.io/2018/03/17/Docker入门（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinshw">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinshw 博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Docker入门（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T22:46:11+08:00">
+                2018-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  故不积跬步，无以至千里；不积小流，无以成江海。
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Docker-是什么？"><a href="#Docker-是什么？" class="headerlink" title="Docker 是什么？"></a>Docker 是什么？</h1><pre><code>Docker属于Linux容器的一种封装，提供简单易用的容器使用接口
+Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。
+总体来说，Docker 的接口相当简单，用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。
+</code></pre><a id="more"></a>
+<h1 id="Docker的用途"><a href="#Docker的用途" class="headerlink" title="Docker的用途"></a>Docker的用途</h1><p>Docker的主要用途，目前有三大类：   </p>
+<ol>
+<li><strong>提供一次性运行环境</strong>：比如，本地测试其他人的软件、持续集成时提供单元测试和构建环境。 </li>
+<li><strong>提供弹性的云服务</strong></li>
+<li><strong>组件微服务架构</strong>。通过多个容器，一台机器可以跑多个服务，因此在本机上可以模拟出微服务架构。</li>
+</ol>
+<h1 id="Docker-架构"><a href="#Docker-架构" class="headerlink" title="Docker 架构"></a>Docker 架构</h1><p>​    Docker使用一个客户端服务器架构。Docker客户端和Docker守护进程交流，Docker守护进程做非常重要的工作，构建，运行和分发你的Docker容器。Docker客户端和守护进程可以运行在同样的系统上，或者是你可以连接一个Docker客户端到一个远程Docker守护进程中。Docker客户端和守护进程通过sockets或通过RESTful API进行沟通交流。</p>
+<p><img src="/images/jiagou.jpg" alt=""></p>
+<h2 id="Docker-守护进程"><a href="#Docker-守护进程" class="headerlink" title="Docker 守护进程"></a>Docker 守护进程</h2><p>Docker daemon</p>
+<h2 id="Docker-客户端"><a href="#Docker-客户端" class="headerlink" title="Docker 客户端"></a>Docker 客户端</h2><p>Client</p>
+<h2 id="Docker-内部"><a href="#Docker-内部" class="headerlink" title="Docker 内部"></a>Docker 内部</h2><h2 id="Docker-镜像"><a href="#Docker-镜像" class="headerlink" title="Docker 镜像"></a>Docker 镜像</h2><p>Image</p>
+<h2 id="Docker容器"><a href="#Docker容器" class="headerlink" title="Docker容器"></a>Docker容器</h2><p>Container</p>
+<h1 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker 安装"></a>Docker 安装</h1><h1 id="image文件"><a href="#image文件" class="headerlink" title="image文件"></a>image文件</h1><p><strong>Docker 把应用程序及其依赖，打包在 image 文件里面。</strong>只有通过这个文件，才能生成 Docker 容器。image 文件可以看作是容器的模板。Docker 根据 image 文件生成容器的实例。同一个 image 文件，可以生成多个同时运行的容器实例。</p>
+<p>image 是二进制文件。实际开发中，一个 image 文件往往通过继承另一个 image 文件，加上一些个性化设置而生成。举例来说，你可以在 Ubuntu 的 image 基础上，往里面加入 Apache 服务器，形成你的 image。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 列出本机的所有 image 文件。</div><div class="line">$ docker image ls</div><div class="line"></div><div class="line"># 删除 image 文件</div><div class="line">$ docker image rm [imageName]</div></pre></td></tr></table></figure>
+<p>image 文件是通用的，一台机器的 image 文件拷贝到另一台机器，照样可以使用。一般来说，为了节省时间，我们应该尽量使用别人制作好的 image 文件，而不是自己制作。即使要定制，也应该基于别人的 image 文件进行加工，而不是从零开始制作。<br>为了方便共享，image 文件制作完成后，可以上传到网上的仓库。Docker 的官方仓库 Docker Hub 是最重要、最常用的 image 仓库。此外，出售自己制作的 image 文件也是可以的。</p>
+<h1 id="实例-Hello-World"><a href="#实例-Hello-World" class="headerlink" title="实例 Hello World"></a>实例 Hello World</h1><p>首先，将image文件从仓库中抓取到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 从docker仓库中抓取到本地</div><div class="line">docker image pull library/hello-world</div><div class="line"># 由于Docker官方提供的image文件都放在library组里面，所以它是默认组，可以省略，因此，上面的命令可以写成下面这样。</div><div class="line">docker image pull hello-world</div></pre></td></tr></table></figure>
+<p>在执行下面命令查看是否抓取成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker image ls </div><div class="line"># 或者</div><div class="line">docker images</div></pre></td></tr></table></figure>
+<p>运行hello-world容器文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">docker container run hello-world</div><div class="line"># 或者</div><div class="line">docker run hello-world</div><div class="line"></div><div class="line">Hello from Docker!</div><div class="line">This message shows that your installation appears to be working correctly.</div><div class="line">... ...</div></pre></td></tr></table></figure>
+<p><code>docker container run</code>命令会从 image 文件，生成一个正在运行的容器实例。</p>
+<p>注意，<code>docker container run</code>命令具有自动抓取 image 文件的功能。如果发现本地没有指定的 image 文件，就会从仓库自动抓取。因此，前面的<code>docker image pull</code>命令并不是必需的步骤。</p>
+<p>输出这段提示以后，<code>hello world</code>就会停止运行，容器自动终止。</p>
+<p>有些容器不会自动终止，因为提供的是服务。比如，安装运行 Ubuntu 的 image，就可以在命令行体验 Ubuntu 系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker container run -it ubuntu bash</div></pre></td></tr></table></figure>
+<p>对于那些不会自动终止的容器，必须使用<a href="https://docs.docker.com/engine/reference/commandline/container_kill/" target="_blank" rel="external"><code>docker container kill</code></a> 命令手动终止。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker container kill [containID]</div></pre></td></tr></table></figure>
+<h1 id="容器文件"><a href="#容器文件" class="headerlink" title="容器文件"></a>容器文件</h1><p><strong>image文件生成的容器实例，本身也是个文件，称位容器文件。</strong>也就是说，一旦容器生成，就会同时存在两个文件，image和容器文件。而且关闭容器并不会删除容器文件，只是容器文件停止运行而已。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 列出本机运行的容器</div><div class="line">$ docker ps </div><div class="line"># 列出本机所有的容器（包括停止和运行）</div><div class="line">$ docker ps -a</div></pre></td></tr></table></figure>
+<p>上面命令执行完毕后，例如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES</div><div class="line">f818cf258d37        hub.c.163.com/library/tomcat   &quot;catalina.sh run&quot;        25 hours ago        Up 25 hours         0.0.0.0:8080-&gt;8080/tcp   jolly_easley</div><div class="line">c5fc06bc40bb        hub.c.163.com/library/mysql    &quot;docker-entrypoint.s…&quot;   6 days ago          Up 25 hours         0.0.0.0:3306-&gt;3306/tcp   ecstatic_pare</div><div class="line">66afb1061bed        hub.c.163.com/library/nginx    &quot;nginx -g &apos;daemon of…&quot;   6 days ago          Up 25 hours         0.0.0.0:32768-&gt;80/tcp    naughty_clarke</div></pre></td></tr></table></figure>
+<p>停止容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker stop [容器ID]</div><div class="line">或者</div><div class="line">$ docker kill [容器ID]</div></pre></td></tr></table></figure>
+<p>启动已有容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker start [容器ID]</div></pre></td></tr></table></figure>
+<p>进入运行的容器命令窗口(bash)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker exec -it [容器ID]</div></pre></td></tr></table></figure>
+<h1 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h1><p>如何生成image镜像文件？如果想推广自己的软件，势必要自己制作image文件。这就需要Dockerfile文件，它是一个文本文件，用做配置image。Docker根据该文件生成二进制的image文件。</p>
+<h1 id="实例：-制作自己的Docker容器"><a href="#实例：-制作自己的Docker容器" class="headerlink" title="实例： 制作自己的Docker容器"></a>实例： 制作自己的Docker容器</h1><p><strong>准备工作：</strong> 下载jpress项目的war包</p>
+<h2 id="1-编写Dockerfile文件"><a href="#1-编写Dockerfile文件" class="headerlink" title="1. 编写Dockerfile文件"></a>1. 编写Dockerfile文件</h2><p>   首先，在项目的根目录下，新建一个文本文件 <code>.dockerignore</code> ，写入下面内容</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.git</div><div class="line">node_modules</div><div class="line">npm-debug.log</div></pre></td></tr></table></figure>
+<p>   上面代码表示，这三个路径要排除，不要打包进入image文件。如果你没有路径要排除，这个文件可以不创建。</p>
+<p>   然后，在项目根目录下创建Dockerfile文件，写入下面内容：</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FROM node:8.4</div><div class="line">COPY . /app</div><div class="line">WORKDIR /app</div><div class="line">RUN npm install --registry=https://registry.npm.taobao.org</div><div class="line">EXPOSE 3000</div></pre></td></tr></table></figure>
+<p>   上面代码一共5行，含义如下：</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FROM node:8.4：该 image 文件继承官方的 node image，冒号表示标签，这里标签是8.4，即8.4版本的 node。</div><div class="line">COPY . /app：将当前目录下的所有文件（除了.dockerignore排除的路径），都拷贝进入 image 文件的/app目录。</div><div class="line">WORKDIR /app：指定接下来的工作路径为/app。</div><div class="line">RUN npm install：在/app目录下，运行npm install命令安装依赖。注意，安装后所有的依赖，都将打包进入 image 文件。</div><div class="line">EXPOSE 3000：将容器 3000 端口暴露出来， 允许外部连接这个端口。</div></pre></td></tr></table></figure>
+<h2 id="2-创建image文件"><a href="#2-创建image文件" class="headerlink" title="2. 创建image文件"></a>2. 创建image文件</h2><p>有了Dockerfile文件后，就可以使用<code>docker image build</code> 命令创建image文件了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker image build -t koa-demo .</div><div class="line"># 或者</div><div class="line">$ docker image build -t koa-demo:0.0.1 .</div></pre></td></tr></table></figure>
+<p>上面代码中，<code>-t</code> 参数用来指定image文件名称，后面还可以用冒号指定标签。如果不指定，默认的标签就是<code>latest</code>。最后的那个点标识Dockerfile文件所在的路径，上例是当前路径，所以是一个点。</p>
+<p>如果运行成功，就可以看到新生产的image文件koa-demo了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker images</div></pre></td></tr></table></figure>
+<h2 id="3-生成容器"><a href="#3-生成容器" class="headerlink" title="3. 生成容器"></a>3. 生成容器</h2><p><code>docker run</code> 命令从image文件生成容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker run -p 9999:3000 -it koa-demo /bin/bash</div><div class="line"># 或者</div><div class="line">$ docker container run -p 8000:3000 -it koa-demo:0.0.1 /bin/bash</div></pre></td></tr></table></figure>
+<p>上面命令的各个参数含义如下：</p>
+<p><code>-p</code>参数：容器的 3000 端口映射到本机的 8000 端口。<br> <code>-it</code>参数：容器的 Shell 映射到当前的 Shell，然后你在本机窗口输入的命令，就会传入容器。<br> <code>koa-demo:0.0.1</code>：image 文件的名字（如果有标签，还需要提供标签，默认是 latest 标签）。<br><code>/bin/bash</code>：容器启动以后，内部第一个执行的命令。这里是启动 Bash，保证用户可以使用 Shell。</p>
+<p><code>docker container run</code>命令的<code>--rm</code>参数，在容器终止运行后自动删除容器文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker container run --rm -p 8000:3000 -it koa-demo /bin/bash</div></pre></td></tr></table></figure>
+<h2 id="4-CMD命令"><a href="#4-CMD命令" class="headerlink" title="4. CMD命令"></a>4. CMD命令</h2><p>上一节的例子里面，容器启动以后，需要手动输入命令<code>node demos/01.js</code>。我们可以把这个命令写在 Dockerfile 里面，这样容器启动以后，这个命令就已经执行了，不用再手动输入了。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">FROM node:8.4</div><div class="line">COPY . /app</div><div class="line">WORKDIR /app</div><div class="line">RUN npm install --registry=https://registry.npm.taobao.org</div><div class="line">EXPOSE 3000</div><div class="line">CMD node demos/01.js</div></pre></td></tr></table></figure>
+<p>上面的 Dockerfile 里面，多了最后一行<code>CMD node demos/01.js</code>，它表示容器启动后自动执行<code>node demos/01.js</code>。</p>
+<p>你可能会问，<code>RUN</code>命令与<code>CMD</code>命令的区别在哪里？简单说，<code>RUN</code>命令在 image 文件的构建阶段执行，执行结果都会打包进入 image 文件；<code>CMD</code>命令则是在容器启动后执行。另外，一个 Dockerfile 可以包含多个<code>RUN</code>命令，但是只能有一个<code>CMD</code>命令。</p>
+<p>注意，指定了<code>CMD</code>命令以后，<code>docker container run</code>命令就不能附加命令了（比如前面的<code>/bin/bash</code>），否则它会覆盖<code>CMD</code>命令。现在，启动容器可以使用下面的命令。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker container run --rm -p 8000:3000 -it koa-demo:0.0.1</div></pre></td></tr></table></figure>
+<h2 id="5-发布image文件"><a href="#5-发布image文件" class="headerlink" title="5. 发布image文件"></a>5. 发布image文件</h2><p>首先，去 <a href="https://hub.docker.com/" target="_blank" rel="external">hub.docker.com</a> 或 <a href="https://cloud.docker.com/" target="_blank" rel="external">cloud.docker.com</a> 注册一个账户。然后，用下面的命令登录。</p>
+<h1 id="其他有用的命令"><a href="#其他有用的命令" class="headerlink" title="其他有用的命令"></a>其他有用的命令</h1><ol>
+<li><p>docker container start</p>
+<p>前面的<code>docker run</code> 命令是新建容器，每次运行一次就有一个新容器。同样的命令运行两次，就会生成2个一模一样的容器文件。如果希望重复使用容器，就要使用<code>docker start</code>命令，使用它启动已生成、已停止运行的容器文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker start [containerID]</div></pre></td></tr></table></figure>
+</li>
+<li><p>docker stop</p>
+<p>前面的<code>docker container kill</code>命令终止容器运行，相当于向容器里面的主进程发出 SIGKILL 信号。而<code>docker container stop</code>命令也是用来终止容器运行，相当于向容器里面的主进程发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker container stop [containerID]</div></pre></td></tr></table></figure>
+<p>这两个信号的差别是，应用程序收到 SIGTERM 信号以后，可以自行进行收尾清理工作，但也可以不理会这个信号。如果收到 SIGKILL 信号，就会强行立即终止，那些正在进行中的操作会全部丢失</p>
+</li>
+</ol>
+<ol>
+<li><p>docker logs</p>
+<p><code>docker logs</code>命令用来查看docker容器的输出，即容器里面的shell的标准输出。如果<code>docker run</code>命令运行容器的时候，没有使用<code>-it</code>参数，就要用这个命令查看输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker logs [containerID]</div></pre></td></tr></table></figure>
+</li>
+<li><p>docker exec</p>
+<p><code>docker exec</code>命令是用于进入一个正在运行的docker容器。如果<code>docker run</code>命令运行容器的时候，没有使用<code>-it</code>参数，就要使用这个命令进入容器。一旦进入容器，就可以在容器的shell执行命令了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec -it [containerID] /bin/bash</div></pre></td></tr></table></figure>
+</li>
+<li><p>docker cp</p>
+<p><code>docker cp</code>命令用于从正在运行的Docker容器里面，将文件拷贝到本机。下面是拷贝当前目录的写法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">docker cp [containerID]:[/path/to/file] .</div><div class="line"></div><div class="line">#从主机复制到容器</div><div class="line">docker cp host_path containerID:container_path</div><div class="line"></div><div class="line">#从容器复制到主机</div><div class="line">docker cp containerID:container_path host_path</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/08/Elasticsearch-安装/" rel="next" title="Elasticsearch 安装">
+                <i class="fa fa-chevron-left"></i> Elasticsearch 安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/08/JDK7-特性/" rel="prev" title="JDK7 特性">
+                JDK7 特性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="jinshw" />
+          <p class="site-author-name" itemprop="name">jinshw</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-是什么？"><span class="nav-number">1.</span> <span class="nav-text">Docker 是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker的用途"><span class="nav-number">2.</span> <span class="nav-text">Docker的用途</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-架构"><span class="nav-number">3.</span> <span class="nav-text">Docker 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-守护进程"><span class="nav-number">3.1.</span> <span class="nav-text">Docker 守护进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-客户端"><span class="nav-number">3.2.</span> <span class="nav-text">Docker 客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-内部"><span class="nav-number">3.3.</span> <span class="nav-text">Docker 内部</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-镜像"><span class="nav-number">3.4.</span> <span class="nav-text">Docker 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker容器"><span class="nav-number">3.5.</span> <span class="nav-text">Docker容器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-安装"><span class="nav-number">4.</span> <span class="nav-text">Docker 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#image文件"><span class="nav-number">5.</span> <span class="nav-text">image文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例-Hello-World"><span class="nav-number">6.</span> <span class="nav-text">实例 Hello World</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器文件"><span class="nav-number">7.</span> <span class="nav-text">容器文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dockerfile"><span class="nav-number">8.</span> <span class="nav-text">Dockerfile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例：-制作自己的Docker容器"><span class="nav-number">9.</span> <span class="nav-text">实例： 制作自己的Docker容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-编写Dockerfile文件"><span class="nav-number">9.1.</span> <span class="nav-text">1. 编写Dockerfile文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-创建image文件"><span class="nav-number">9.2.</span> <span class="nav-text">2. 创建image文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-生成容器"><span class="nav-number">9.3.</span> <span class="nav-text">3. 生成容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-CMD命令"><span class="nav-number">9.4.</span> <span class="nav-text">4. CMD命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-发布image文件"><span class="nav-number">9.5.</span> <span class="nav-text">5. 发布image文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他有用的命令"><span class="nav-number">10.</span> <span class="nav-text">其他有用的命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinshw</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
