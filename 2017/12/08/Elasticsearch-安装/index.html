@@ -58,7 +58,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -97,7 +97,8 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jinshw.github.io/images/elasticsearch/es.png">
 <meta property="og:image" content="http://jinshw.github.io/images/elasticsearch/es-head.png">
-<meta property="og:updated_time" content="2017-12-18T07:42:10.202Z">
+<meta property="og:image" content="http://jinshw.github.io/images/elasticsearch/es-change.png">
+<meta property="og:updated_time" content="2018-05-22T09:33:15.624Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch 安装">
 <meta name="twitter:description" content="Elasticsearch 安装下载https://www.elastic.co/cn/downloads">
@@ -343,6 +344,18 @@ elasticsearch.url: &quot;http://localhost:9200&quot;
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">elasticsearch-head 不能连接到elasticsearch服务，因为跨域</div></pre></td></tr></table></figure>
 <h2 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h2><p>编辑elasticsearch/config/elasticsearch.yml文件，添加以下内容：<br>    http.cors.enabled: true<br>    http.cors.allow-origin: “*”</p>
 <p><img src="/images/elasticsearch/es.png" alt="upload successful"><br><img src="/images/elasticsearch/es-head.png" alt="upload successful"></p>
+<h1 id="安装-marvel-插件"><a href="#安装-marvel-插件" class="headerlink" title="安装 marvel 插件"></a>安装 marvel 插件</h1><ul>
+<li>在elasticsearch 中运行：         bin/elasticsearch-plugin.bat install x-pack</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">安装遇到：Continue with installation? [y/N]y</div></pre></td></tr></table></figure>
+<ul>
+<li><p>在Kibana上安装X-Pack<br>  bin/kibana-plugin install x-pack</p>
+</li>
+<li><p>访问<br>  在浏览器上输入： <a href="http://localhost:5601/" target="_blank" rel="external">http://localhost:5601/</a> ，可以打开Kibana，此时需要输入用户名和密码登录，默认分别是 elastic 和 changeme</p>
+</li>
+<li><p>修改密码<br><img src="/images/elasticsearch/es-change.png" alt="upload successful"></p>
+</li>
+</ul>
 
       
     </div>
@@ -526,7 +539,7 @@ elasticsearch.url: &quot;http://localhost:9200&quot;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch-安装"><span class="nav-number">1.</span> <span class="nav-text">Elasticsearch 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kibana安装"><span class="nav-number">2.</span> <span class="nav-text">kibana安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载-1"><span class="nav-number">2.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问"><span class="nav-number">2.3.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阮一峰教程"><span class="nav-number">2.4.</span> <span class="nav-text">阮一峰教程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#elasticsearch-head-插件安装-可选"><span class="nav-number">3.</span> <span class="nav-text">elasticsearch-head 插件安装(可选)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-1"><span class="nav-number">3.1.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch-安装"><span class="nav-number">1.</span> <span class="nav-text">Elasticsearch 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kibana安装"><span class="nav-number">2.</span> <span class="nav-text">kibana安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载-1"><span class="nav-number">2.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问"><span class="nav-number">2.3.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阮一峰教程"><span class="nav-number">2.4.</span> <span class="nav-text">阮一峰教程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#elasticsearch-head-插件安装-可选"><span class="nav-number">3.</span> <span class="nav-text">elasticsearch-head 插件安装(可选)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-1"><span class="nav-number">3.1.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-marvel-插件"><span class="nav-number">4.</span> <span class="nav-text">安装 marvel 插件</span></a></li></ol></div>
             
 
           </div>
