@@ -95,17 +95,17 @@
 <meta property="og:site_name" content="Jinshw 博客">
 <meta property="og:description" content="定义：Transmission Control Protocol/Internet Protocol的简写，中译名为传输控制协议/因特网互联协议，又名网络通讯协议，是Internet最基本的协议、Internet国际互联网络的基础，由网络层的IP协议和传输层的TCP协议组成">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://jinshw.github.io/images/import.png">
-<meta property="og:image" content="http://jinshw.github.io/images/import2.png">
-<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/bluetzar/IPPackage.jpg">
-<meta property="og:image" content="http://jinshw.github.io/images/import3.png">
-<meta property="og:image" content="http://jinshw.github.io/images/import7.png">
-<meta property="og:image" content="http://jinshw.github.io/images/import6.png">
-<meta property="og:updated_time" content="2017-11-27T02:19:15.844Z">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp-ip.jpg">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp-ip2.jpg">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp-head1.jpg">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp-head.jpg">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp3.jpg">
+<meta property="og:image" content="http://jinshw.github.io/images/http/tcp4.jpg">
+<meta property="og:updated_time" content="2018-05-23T08:46:06.891Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tcp&#x2F;ip 传输协议">
 <meta name="twitter:description" content="定义：Transmission Control Protocol/Internet Protocol的简写，中译名为传输控制协议/因特网互联协议，又名网络通讯协议，是Internet最基本的协议、Internet国际互联网络的基础，由网络层的IP协议和传输层的TCP协议组成">
-<meta name="twitter:image" content="http://jinshw.github.io/images/import.png">
+<meta name="twitter:image" content="http://jinshw.github.io/images/http/tcp-ip.jpg">
 
 
 
@@ -331,17 +331,17 @@
 
       
         <p><strong>定义：</strong>Transmission Control Protocol/Internet Protocol的简写，中译名为传输控制协议/因特网互联协议，又名<strong>网络通讯协议</strong>，是Internet最基本的协议、Internet国际互联网络的基础，由网络层的<strong>IP协议</strong>和<strong>传输层的TCP协议</strong>组成<br><a id="more"></a></p>
-<p><img src="/images/import.png" alt=""></p>
+<p><img src="/images/http/tcp-ip.jpg" alt=""></p>
 <ol>
 <li><p>TCP/IP参考模型的层次结构</p>
-<p><img src="/images/import2.png" alt=""></p>
+<p><img src="/images/http/tcp-ip2.jpg" alt=""></p>
 </li>
 </ol>
 <p>TCP/IP报文格式<br>1、IP报文格式</p>
 <p>IP协议是TCP/IP协议族中最为核心的协议。它提供不可靠、无连接的服务，也即依赖其他层的协议进行差错控制。在局域网环境，IP协议往往被封装在以太网帧中传送。而所有的TCP、UDP、ICMP、IGMP数据都被封装在IP数据报中传送。如图2-3所示：</p>
-<p><img src="http://images.cnblogs.com/cnblogs_com/bluetzar/IPPackage.jpg" alt=""></p>
+<p><img src="/images/http/tcp-head1.jpg" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">图2-3　 TCP/IP报文封装</div></pre></td></tr></table></figure>
-<p><img src="/images/import3.png" alt=""><br>                                             图2-4　 IP头部格式</p>
+<p><img src="/images/http/tcp-head.jpg" alt=""><br>                                             图2-4　 IP头部格式</p>
 <hr>
 <ul>
 <li><h2 id="TCP连接建立、释放时的握手过程"><a href="#TCP连接建立、释放时的握手过程" class="headerlink" title="TCP连接建立、释放时的握手过程"></a>TCP连接建立、释放时的握手过程</h2></li>
@@ -351,8 +351,8 @@
 <p>● <strong>目标主机</strong>发回确认数据段，此段中的同步标志位（SYN）同样被置1，且确认标志位（ACK）也置1，同时在确认序号字段表明目标主机期待收到源主机下一个数据段的序号（即表明前一个数据段已收到并且没有错误）。此外，此段中还包含目标主机的段初始序号。</p>
 <p>● <strong>源主机</strong>再回送一个数据段，同样带有递增的发送序号和确认序号。</p>
 <p>至此为止，TCP会话的三次握手完成。接下来，源主机和目标主机可以互相收发数据。整个过程可用图2-8表示。</p>
-<p><img src="/images/import7.png" alt=""></p>
-<p><img src="/images/import6.png" alt=""></p>
+<p><img src="/images/http/tcp3.jpg" alt=""></p>
+<p><img src="/images/http/tcp4.jpg" alt=""></p>
 
       
     </div>
