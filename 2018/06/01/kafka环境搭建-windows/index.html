@@ -1,0 +1,784 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kafka,zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="kafka环境搭建(windows)原文引用：https://www.jianshu.com/p/f7037105db46 zookeeper zookeeper 下载地址：http://apache.fayea.com/zookeeper/current/">
+<meta name="keywords" content="kafka,zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka环境搭建(windows)">
+<meta property="og:url" content="http://jinshw.github.io/2018/06/01/kafka环境搭建-windows/index.html">
+<meta property="og:site_name" content="Jinshw 博客">
+<meta property="og:description" content="kafka环境搭建(windows)原文引用：https://www.jianshu.com/p/f7037105db46 zookeeper zookeeper 下载地址：http://apache.fayea.com/zookeeper/current/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527839918487.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840168103.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840259527.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840343846.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840452421.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840547143.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840597418.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840638873.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840699576.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527840858400.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527841299963.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527841450736.png">
+<meta property="og:image" content="http://jinshw.github.io/images/kafka/1527841688385.png">
+<meta property="og:updated_time" content="2018-06-01T08:38:48.506Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kafka环境搭建(windows)">
+<meta name="twitter:description" content="kafka环境搭建(windows)原文引用：https://www.jianshu.com/p/f7037105db46 zookeeper zookeeper 下载地址：http://apache.fayea.com/zookeeper/current/">
+<meta name="twitter:image" content="http://jinshw.github.io/images/kafka/1527839918487.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jinshw.github.io/2018/06/01/kafka环境搭建-windows/"/>
+
+
+
+
+
+  <title> kafka环境搭建(windows) | Jinshw 博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jinshw 博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-/"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jinshw.github.io/2018/06/01/kafka环境搭建-windows/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinshw">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinshw 博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                kafka环境搭建(windows)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T15:56:06+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="kafka环境搭建-windows"><a href="#kafka环境搭建-windows" class="headerlink" title="kafka环境搭建(windows)"></a>kafka环境搭建(windows)</h1><p>原文引用：<a href="https://www.jianshu.com/p/f7037105db46" target="_blank" rel="external">https://www.jianshu.com/p/f7037105db46</a></p>
+<h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><ul>
+<li><p>zookeeper</p>
+<p>下载地址：<a href="http://apache.fayea.com/zookeeper/current/" target="_blank" rel="external">http://apache.fayea.com/zookeeper/current/</a></p>
+<p><img src="\images\kafka\1527839918487.png" alt="1527839918487"></p>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>解压E:\study\kafka_work\zookeeper-3.4.12，创建<code>data</code>文件夹</p>
+<p><img src="\images\kafka\1527840168103.png" alt="1527840168103"></p>
+</li>
+<li><p>进入到conf目录，然后复制zoo_sample.cfg为zoo.cfg</p>
+<p><img src="\images\kafka\1527840259527.png" alt="1527840259527"></p>
+</li>
+</ul>
+<p>修改zoo.cfg中的<code>dataDir</code></p>
+<p><img src="\images\kafka\1527840343846.png" alt="1527840343846"></p>
+<ul>
+<li><p>启动Zookeeper，进入 <strong>bin</strong> 目录，执行 <strong>zkServer.cmd</strong></p>
+<p><img src="\images\kafka\1527840452421.png" alt="1527840452421"></p>
+</li>
+</ul>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><ul>
+<li><p>下载</p>
+<p>地址： <a href="http://kafka.apache.org/downloads.html" target="_blank" rel="external">http://kafka.apache.org/downloads.html</a></p>
+<p><img src="\images\kafka\1527840547143.png" alt="1527840547143"></p>
+</li>
+</ul>
+<ul>
+<li><p>解压，建立一个空文件夹 <strong>logs</strong></p>
+<p><img src="\images\kafka\1527840597418.png" alt="1527840597418"></p>
+</li>
+</ul>
+<p>### </p>
+<ul>
+<li><p>进入config目录，编辑 <strong>server.properties</strong> 文件</p>
+<p><img src="\images\kafka\1527840638873.png" alt="1527840638873"></p>
+</li>
+</ul>
+<p>修改<strong>log.dirs</strong></p>
+<p><img src="\images\kafka\1527840699576.png" alt="1527840699576"></p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ul>
+<li><p>cmd进入kafka文件夹，我的是E:\study\kafka_work\kafka_2.12-1.1.0，执行下面命令</p>
+<p><code>.\bin\windows\kafka-server-start.bat .\config\server.properties</code></p>
+</li>
+</ul>
+<p><img src="\images\kafka\1527840858400.png" alt="1527840858400"></p>
+<p><strong>注意</strong>：如果遇到上图<code>无法加载主类</code>问题，请执行SET CLASSPATH=.;</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li><p>cmd 进入<strong>E:\study\kafka_work\kafka_2.12-1.1.0\bin\windows</strong>目录，创建一个topic</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test.topic</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>打开一个Producer<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kafka-console-producer.bat --broker-list localhost:9092 --topic test.topic</div></pre></td></tr></table></figure></p>
+<p>  <img src="\images\kafka\1527841299963.png" alt="1527841299963"></p>
+<ul>
+<li><p>执行命令，打开生产者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kafka-console-consumer.bat --zookeeper localhost:2181 --topic test.topic</div></pre></td></tr></table></figure>
+<p><img src="\images\kafka\1527841450736.png" alt="1527841450736"></p>
+</li>
+</ul>
+<ul>
+<li>现在有4个cmd窗口，<ol>
+<li>zookeeper</li>
+<li>kafka</li>
+<li>producer</li>
+<li>consumer</li>
+</ol>
+</li>
+<li>下面，我们在3号窗口(Producer)输入一些字符，就会看到4号窗口马上就收到消息</li>
+</ul>
+<p><img src="\images\kafka\1527841688385.png" alt="1527841688385"></p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>在搭建时如果提示: <strong>错误: 找不到或无法加载主类 Files\Java\jdk1.8.0_141\lib\dt.jar;D:\Program</strong>,请执行命令 <strong>set classpath=.;</strong></li>
+<li>zookeeper 默认端口号为 <strong>2181</strong></li>
+<li>kafka 默认端口号为 <strong>9092</strong></li>
+<li><strong>produce</strong>（发送消息者）启动时参数使用的是kafka的端口号（默认9092），而<strong>consumer</strong>（接收消息者）启动时使用的是zookeeper端口号（默认2181）</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/09/HTTP协议（请求头部）/" rel="next" title="HTTP协议（请求头部）">
+                <i class="fa fa-chevron-left"></i> HTTP协议（请求头部）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="jinshw" />
+          <p class="site-author-name" itemprop="name">jinshw</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka环境搭建-windows"><span class="nav-number">1.</span> <span class="nav-text">kafka环境搭建(windows)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper"><span class="nav-number">1.1.</span> <span class="nav-text">zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka"><span class="nav-number">1.2.</span> <span class="nav-text">Kafka</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">1.3.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">1.5.</span> <span class="nav-text">注意事项</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinshw</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
